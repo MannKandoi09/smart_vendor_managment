@@ -3,6 +3,8 @@ package vendor_management.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 import vendor_management.dto.AuthResponse;
 import vendor_management.dto.LoginRequest;
 import vendor_management.dto.RegisterRequest;
@@ -22,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public User register(
-            @RequestBody RegisterRequest request) {
+            @Valid @RequestBody RegisterRequest request) {
 
         return userService.register(request);
     }
@@ -39,6 +41,12 @@ public class AuthController {
         String token =
                 jwtUtil.generateToken(username);
 
-        return new AuthResponse(token);
+        String role =
+                userService.getUserRole(username);
+
+        return new AuthResponse(
+                token,
+                role
+        );
     }
 }

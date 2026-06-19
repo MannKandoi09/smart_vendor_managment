@@ -19,6 +19,12 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public User register(RegisterRequest request) {
+        if(userRepository.findByUsername(
+                request.getUsername()).isPresent()) {
+
+            throw new RuntimeException(
+                    "Username Already Exists");
+        }
 
         User user = new User();
 
@@ -52,5 +58,15 @@ public class UserService {
         }
 
         return user.getUsername();
+    }
+
+    public String getUserRole(String username) {
+
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() ->
+                        new RuntimeException("User Not Found"));
+
+        return user.getRole().name();
     }
 }
