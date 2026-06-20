@@ -2,5 +2,6 @@ package vendor_management.entity;
 
 public enum Role {
     ADMIN,
-    USER
+    USER,
+    VENDOR
 }

@@ -36,6 +36,8 @@ public class SecurityConfig {
                         .requestMatchers("/user/**")
                         .hasAnyRole("USER", "ADMIN")
 
+                        .requestMatchers("/admin/vendors/**").authenticated()
+
                         .anyRequest()
                         .authenticated()
                 )

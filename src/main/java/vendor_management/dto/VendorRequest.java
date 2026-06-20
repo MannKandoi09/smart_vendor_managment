@@ -1,23 +1,12 @@
-package vendor_management.entity;
+package vendor_management.dto;
 
-import jakarta.persistence.*;
-import vendor_management.entity.User;
-
-import java.time.LocalDate;
-
-@Entity
-@Table(name = "vendors")
-public class Vendor {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class VendorRequest {
 
     private String vendorCode;
 
     private String vendorName;
 
-    private String company_name;
+    private String companyName;
 
     private String email;
 
@@ -27,29 +16,11 @@ public class Vendor {
 
     private String address;
 
-    private Boolean active;
+    private String username;
 
-    private LocalDate createdDate;
+    private String password;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-
-    public String getCompany_name() {
-        return company_name;
-    }
-
-    public void setCompany_name(String company_name) {
-        this.company_name = company_name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public VendorRequest() {
     }
 
     public String getVendorCode() {
@@ -100,27 +71,27 @@ public class Vendor {
         this.address = address;
     }
 
-    public Boolean getActive() {
-        return active;
+    public String getUsername() {
+        return username;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public User getUser() {
-        return user;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public LocalDate getCreatedDate() {
-        return createdDate;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }
