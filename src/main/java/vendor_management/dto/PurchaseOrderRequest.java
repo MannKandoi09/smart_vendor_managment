@@ -30,6 +30,10 @@ public class PurchaseOrderRequest {
 
     private List<PurchaseOrderItemRequest> items;
 
+    private Double subTotal;
+    private Double taxAmount;
+    private Double grandTotal;
+
     public String getPoNumber() {
         return poNumber;
     }
@@ -116,5 +120,29 @@ public class PurchaseOrderRequest {
 
     public void setItems(List<PurchaseOrderItemRequest> items) {
         this.items = items;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public Double getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(Double taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public Double getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(Double grandTotal) {
+        this.grandTotal = grandTotal;
     }
 }

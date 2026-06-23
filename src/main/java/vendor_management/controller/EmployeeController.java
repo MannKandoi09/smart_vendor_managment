@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/employees")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class EmployeeController {
 
     @Autowired
@@ -22,11 +23,8 @@ public class EmployeeController {
     private PurchaseOrderRepository purchaseOrderRepository;
 
     @PostMapping
-    public Employee createEmployee(
-            @RequestBody EmployeeRequest request) {
-
-        return employeeService
-                .createEmployee(request);
+    public Employee createEmployee(@RequestBody EmployeeRequest request) {
+        return employeeService.createEmployee(request);
     }
 
     @GetMapping
@@ -36,27 +34,24 @@ public class EmployeeController {
                 .getAllEmployees();
     }
 
+    // 1. GET SINGLE EMPLOYEE BY ID METHOD
     @GetMapping("/{id}")
-    public Employee getEmployeeById(
-            @PathVariable Long id) {
-
-        return employeeService
-                .getEmployeeById(id);
+    public Employee getEmployeeById(@PathVariable(name = "id") Long id) { // 🚀 FIXED: explicit name map add kiya
+        return employeeService.getEmployeeById(id);
     }
+
+    // 2. PUT UPDATE EMPLOYEE METHOD
     @PutMapping("/{id}")
     public Employee updateEmployee(
-            @PathVariable Long id,
+            @PathVariable(name = "id") Long id, // 🚀 FIXED: explicit name map add kiya
             @RequestBody EmployeeRequest request) {
-
-        return employeeService
-                .updateEmployee(id, request);
+        return employeeService.updateEmployee(id, request);
     }
-    @DeleteMapping("/{id}")
-    public String deleteEmployee(
-            @PathVariable Long id) {
 
-        return employeeService
-                .deleteEmployee(id);
+    // 3. DELETE EMPLOYEE METHOD
+    @DeleteMapping("/{id}")
+    public String deleteEmployee(@PathVariable(name = "id") Long id) { // 🚀 FIXED: explicit name map add kiya
+        return employeeService.deleteEmployee(id);
     }
     @PutMapping("/{id}/activate")
     public Employee activateEmployee(

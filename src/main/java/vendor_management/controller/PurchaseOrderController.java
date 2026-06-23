@@ -52,6 +52,14 @@ public class PurchaseOrderController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<PurchaseOrderResponse> updatePurchaseOrder(
+            @PathVariable("id") Long id, // Fixed explicit naming
+            @RequestBody PurchaseOrderRequest request) {
+        PurchaseOrderResponse updatedPo = purchaseOrderService.updatePurchaseOrder(id, request);
+        return ResponseEntity.ok(updatedPo);
+    }
+
     // 1. Database ID ke base par fetch karne ke liye
     @GetMapping("/view/id/{id}")
     public ResponseEntity<PurchaseOrderResponse> getPurchaseOrderById(@PathVariable("id") Long id) {

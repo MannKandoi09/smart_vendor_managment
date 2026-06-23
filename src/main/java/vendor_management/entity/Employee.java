@@ -32,7 +32,7 @@ public class Employee {
 
     private Boolean active;
 
-    @Column(length = 500)
+    @Column(length = 500 , columnDefinition = "LONGTEXT")
     private String profileImageUrl;
 
     private LocalDate createdDate;

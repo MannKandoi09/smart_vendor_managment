@@ -20,7 +20,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
 
-
         http
                 .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
@@ -29,11 +28,13 @@ public class SecurityConfig {
                         // 1. Authentication endpoints complete bypass
                         .requestMatchers("/auth/**").permitAll()
 
-                        // 2. FIXED: Explicitly allow Purchase Order endpoints for both Admin and User/Employee roles
-                        // It covers both list page ("") and specific ID details ("/**") safely
+                        // 🚀 FIXED: Ab actual path '/admin/employees/**' hai, isliye ise explicitly bypass karein
+                        .requestMatchers("/admin/employees", "/admin/employees/**").permitAll()
+
+                        // 2. Explicitly allow Purchase Order endpoints for both Admin and User/Employee roles
                         .requestMatchers("/purchase-orders", "/purchase-orders/**").hasAnyRole("ADMIN", "USER")
 
-                        // 3. Admin strictly bounded resources
+                        // 3. Admin strictly bounded resources (Iske upar employee allow lagaya hai, toh ye baki cheezo ko safe rakhega)
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         // 4. User bounded resources
@@ -45,7 +46,6 @@ public class SecurityConfig {
                         // 6. Remaining fallback requests
                         .anyRequest().authenticated()
                 )
-
                 .addFilterBefore(
                         jwtFilter,
                         UsernamePasswordAuthenticationFilter.class

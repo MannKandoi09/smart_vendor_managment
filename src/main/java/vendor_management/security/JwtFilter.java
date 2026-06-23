@@ -25,6 +25,14 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    // 🚀 FIXED: explicit configuration method to skip filter logic for public endpoints
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        // Custom bypass rules formulation for authorization endpoint and employee module
+        return path.startsWith("/admin/employees") || path.startsWith("/auth/");
+    }
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -32,30 +40,20 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader =
-                request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null ||
-                !authHeader.startsWith("Bearer ")) {
-
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token =
-                authHeader.substring(7);
-
-        String username =
-                jwtUtil.extractUsername(token);
+        String token = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
         System.out.println("TOKEN USERNAME = " + username);
 
-        if (username != null &&
-                SecurityContextHolder.getContext()
-                        .getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails =
-                    userDetailsService
-                            .loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtUtil.validateToken(token)) {
 
@@ -67,13 +65,10 @@ public class JwtFilter extends OncePerRequestFilter {
                         );
 
                 authToken.setDetails(
-                        new WebAuthenticationDetailsSource()
-                                .buildDetails(request)
+                        new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                SecurityContextHolder
-                        .getContext()
-                        .setAuthentication(authToken);
+                SecurityContextHolder.getContext().setAuthentication(authToken);
                 System.out.println("AUTHENTICATION SET");
             }
         }

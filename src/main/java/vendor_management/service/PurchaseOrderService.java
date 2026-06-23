@@ -162,6 +162,73 @@ public class PurchaseOrderService {
     }
 
     @Transactional
+    public PurchaseOrderResponse updatePurchaseOrder(Long id, PurchaseOrderRequest request) {
+        // 1. Existing Purchase Order database se nikalen
+        PurchaseOrder po = purchaseOrderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found with id: " + id));
+
+        // 2. Parent properties ko update karein (Jo request mein available hain)
+        po.setOrderDate(request.getOrderDate());
+        po.setExpectedDeliveryDate(request.getExpectedDeliveryDate());
+        po.setReferenceNumber(request.getReferenceNumber());
+        po.setPaymentTerms(request.getPaymentTerms());
+        po.setNotes(request.getNotes());
+        po.setDeliveryAddress(request.getDeliveryAddress());
+        po.setBillingAddress(request.getBillingAddress());
+
+        // 3. Vendor aur Employee relationships reload karein
+        if (request.getVendorId() != null) {
+            Vendor vendor = vendorRepository.findById(request.getVendorId())
+                    .orElseThrow(() -> new RuntimeException("Vendor not found"));
+            po.setVendor(vendor);
+        }
+        if (request.getEmployeeId() != null) {
+            Employee employee = employeeRepository.findById(request.getEmployeeId())
+                    .orElseThrow(() -> new RuntimeException("Employee not found"));
+            po.setEmployee(employee);
+        }
+
+        // 4. FIXED: Purane items clear karke naye items loop se add karenge
+        // Aur sath hi sath runtime par totals calculate karenge bina request object par depend hue!
+        po.getItems().clear();
+
+        double calculatedSubTotal = 0.0;
+        double calculatedTaxAmount = 0.0;
+
+        if (request.getItems() != null) {
+            for (PurchaseOrderItemRequest itemReq : request.getItems()) {
+                PurchaseOrderItem newItem = new PurchaseOrderItem();
+                newItem.setItemName(itemReq.getItemName());
+                newItem.setDescription(itemReq.getDescription());
+                newItem.setQuantity(itemReq.getQuantity());
+                newItem.setUnitPrice(itemReq.getUnitPrice());
+                newItem.setTax(itemReq.getTax());
+
+                // Individual row calculations
+                double baseRowTotal = itemReq.getQuantity() * itemReq.getUnitPrice();
+                double rowTax = baseRowTotal * (itemReq.getTax() / 100.0);
+                newItem.setTotal(baseRowTotal + rowTax);
+
+                // Subtotal aur Tax accumulation
+                calculatedSubTotal += baseRowTotal;
+                calculatedTaxAmount += rowTax;
+
+                newItem.setPurchaseOrder(po);
+                po.getItems().add(newItem);
+            }
+        }
+
+        // 5. Direct calculated totals ko entity (po) mein set kar dein
+        po.setSubTotal(calculatedSubTotal);
+        po.setTaxAmount(calculatedTaxAmount);
+        po.setGrandTotal(calculatedSubTotal + calculatedTaxAmount);
+
+        // 6. Database me save karke badia se clean Response DTO return kar dein
+        PurchaseOrder updatedPo = purchaseOrderRepository.save(po);
+        return mapToResponse(updatedPo);
+    }
+
+    @Transactional
     public void deletePurchaseOrder(Long id) {
         purchaseOrderRepository.deleteById(id);
     }
