@@ -1,8 +1,12 @@
 package vendor_management.entity;
 
 import jakarta.persistence.*;
+import vendor_management.entity.Employee;
+import vendor_management.entity.PurchaseOrderItem;
+import vendor_management.entity.Vendor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "purchase_orders")
@@ -16,19 +20,46 @@ public class PurchaseOrder {
 
     private LocalDate orderDate;
 
-    private Double totalAmount;
+    private String referenceNumber;
 
-    private String description;
+    private String paymentTerms;
 
-    private String status; // PENDING, APPROVED, REJECTED
+    private LocalDate expectedDeliveryDate;
+
+    @Column(length = 1000)
+    private String deliveryAddress;
+
+    @Column(length = 1000)
+    private String billingAddress;
+
+    @Column(length = 1000)
+    private String notes;
+
+    private Double subTotal;
+
+    private Double taxAmount;
+
+    private Double grandTotal;
+
+    private String status;
+
+    private Boolean active;
+
+    private LocalDate createdDate;
 
     @ManyToOne
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
-    private Boolean active;
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
-    private LocalDate createdDate;
+    @OneToMany(
+            mappedBy = "purchaseOrder",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<PurchaseOrderItem> items;
 
     public Long getId() {
         return id;
@@ -54,20 +85,76 @@ public class PurchaseOrder {
         this.orderDate = orderDate;
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
+    public String getReferenceNumber() {
+        return referenceNumber;
     }
 
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setReferenceNumber(String referenceNumber) {
+        this.referenceNumber = referenceNumber;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPaymentTerms() {
+        return paymentTerms;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPaymentTerms(String paymentTerms) {
+        this.paymentTerms = paymentTerms;
+    }
+
+    public LocalDate getExpectedDeliveryDate() {
+        return expectedDeliveryDate;
+    }
+
+    public void setExpectedDeliveryDate(LocalDate expectedDeliveryDate) {
+        this.expectedDeliveryDate = expectedDeliveryDate;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public Double getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(Double taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public Double getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(Double grandTotal) {
+        this.grandTotal = grandTotal;
     }
 
     public String getStatus() {
@@ -76,14 +163,6 @@ public class PurchaseOrder {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Vendor getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(Vendor vendor) {
-        this.vendor = vendor;
     }
 
     public Boolean getActive() {
@@ -100,5 +179,29 @@ public class PurchaseOrder {
 
     public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public List<PurchaseOrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<PurchaseOrderItem> items) {
+        this.items = items;
     }
 }

@@ -67,4 +67,9 @@ public class VendorController {
     public List<Vendor> getAllVendors() {
         return vendorService.getAllVendors();
     }
+
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalVendorsCount() {
+        return ResponseEntity.ok(vendorService.totalVendors());
+    }
 }

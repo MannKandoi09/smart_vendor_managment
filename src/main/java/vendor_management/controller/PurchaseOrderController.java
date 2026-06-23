@@ -1,85 +1,70 @@
 package vendor_management.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vendor_management.dto.PurchaseOrderRequest;
 import vendor_management.dto.PurchaseOrderResponse;
-import vendor_management.entity.PurchaseOrder;
 import vendor_management.service.PurchaseOrderService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/purchase-orders")
+@CrossOrigin(origins = "*") // Agar frontend ports mismatch (CORS) block ho raha ho toh use karein
 public class PurchaseOrderController {
 
     @Autowired
     private PurchaseOrderService purchaseOrderService;
 
+    // 1. Create Purchase Order
     @PostMapping("/add")
-    public PurchaseOrderResponse addPurchaseOrder(
-            @RequestBody PurchaseOrderRequest request) {
-
-        return purchaseOrderService
-                .addPurchaseOrder(request);
+    public ResponseEntity<PurchaseOrderResponse> addPurchaseOrder(@RequestBody PurchaseOrderRequest request) {
+        PurchaseOrderResponse response = purchaseOrderService.addPurchaseOrder(request);
+        return ResponseEntity.ok(response);
     }
 
+    // 2. FIXED: Changed return type from List<PurchaseOrder> to List<PurchaseOrderResponse>
     @GetMapping
-    public List<PurchaseOrder> getAllPurchaseOrders() {
-
-        return purchaseOrderService
-                .getAllPurchaseOrders();
+    public ResponseEntity<List<PurchaseOrderResponse>> getAllPurchaseOrders() {
+        List<PurchaseOrderResponse> list = purchaseOrderService.getAllPurchaseOrders();
+        return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/{id}")
-    public PurchaseOrder getPurchaseOrderById(
-            @PathVariable Long id) {
-
-        return purchaseOrderService
-                .getPurchaseOrderById(id);
-    }
-
-    @PutMapping("/{id}")
-    public PurchaseOrder updatePurchaseOrder(
-            @PathVariable Long id,
-            @RequestBody PurchaseOrderRequest request) {
-
-        return purchaseOrderService
-                .updatePurchaseOrder(id,
-                        request);
-    }
-
+    // 4. Delete Purchase Order
     @DeleteMapping("/{id}")
-    public String deletePurchaseOrder(
-            @PathVariable Long id) {
-
-        purchaseOrderService
-                .deletePurchaseOrder(id);
-
-        return "Purchase Order deleted successfully";
+    public ResponseEntity<?> deletePurchaseOrder(@PathVariable("id") Long id) { // FIXED: ("id") explicitly add kiya
+        purchaseOrderService.deletePurchaseOrder(id);
+        return ResponseEntity.ok().build();
     }
 
+    // 5. FIXED: Changed return type from PurchaseOrder to PurchaseOrderResponse
     @PutMapping("/{id}/approve")
-    public PurchaseOrder approvePurchaseOrder(
-            @PathVariable Long id) {
-
-        return purchaseOrderService
-                .approvePurchaseOrder(id);
+    public ResponseEntity<PurchaseOrderResponse> approvePurchaseOrder(@PathVariable Long id) {
+        PurchaseOrderResponse response = purchaseOrderService.approvePurchaseOrder(id);
+        return ResponseEntity.ok(response);
     }
 
+    // 6. FIXED: Changed return type from PurchaseOrder to PurchaseOrderResponse
     @PutMapping("/{id}/reject")
-    public PurchaseOrder rejectPurchaseOrder(
-            @PathVariable Long id) {
-
-        return purchaseOrderService
-                .rejectPurchaseOrder(id);
+    public ResponseEntity<PurchaseOrderResponse> rejectPurchaseOrder(@PathVariable Long id) {
+        PurchaseOrderResponse response = purchaseOrderService.rejectPurchaseOrder(id);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/search")
-    public List<PurchaseOrder> searchPurchaseOrder(
-            @RequestParam String poNumber) {
+    // 1. Database ID ke base par fetch karne ke liye
+    @GetMapping("/view/id/{id}")
+    public ResponseEntity<PurchaseOrderResponse> getPurchaseOrderById(@PathVariable("id") Long id) {
+        PurchaseOrderResponse response = purchaseOrderService.getPurchaseOrderById(id);
+        return ResponseEntity.ok(response);
+    }
 
-        return purchaseOrderService
-                .searchPurchaseOrder(poNumber);
+    // 2. Alphanumeric PO Number ke base par fetch karne ke liye
+    // ✅ FIXED CODE (Aapko is tarah likhna hai):
+    @GetMapping("/view/po/{poNumber}")
+    public ResponseEntity<PurchaseOrderResponse> getPurchaseOrderByPoNumber(@PathVariable("poNumber") String poNumber) {
+        // Hamne explicitly ("poNumber") define kar diya hai
+        PurchaseOrderResponse response = purchaseOrderService   .getPurchaseOrderByPoNumber(poNumber);
+        return ResponseEntity.ok(response);
     }
 }

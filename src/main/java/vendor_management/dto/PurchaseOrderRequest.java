@@ -1,18 +1,34 @@
 package vendor_management.dto;
 
-import java.time.LocalDate;
+import lombok.Getter;
 
+import java.time.LocalDate;
+import java.util.List;
+
+@Getter
 public class PurchaseOrderRequest {
 
     private String poNumber;
 
     private LocalDate orderDate;
 
-    private Double totalAmount;
+    private String referenceNumber;
 
-    private String description;
+    private String paymentTerms;
+
+    private LocalDate expectedDeliveryDate;
+
+    private String deliveryAddress;
+
+    private String billingAddress;
+
+    private String notes;
 
     private Long vendorId;
+
+    private Long employeeId;
+
+    private List<PurchaseOrderItemRequest> items;
 
     public String getPoNumber() {
         return poNumber;
@@ -30,20 +46,52 @@ public class PurchaseOrderRequest {
         this.orderDate = orderDate;
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
+    public String getReferenceNumber() {
+        return referenceNumber;
     }
 
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setReferenceNumber(String referenceNumber) {
+        this.referenceNumber = referenceNumber;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPaymentTerms() {
+        return paymentTerms;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPaymentTerms(String paymentTerms) {
+        this.paymentTerms = paymentTerms;
+    }
+
+    public LocalDate getExpectedDeliveryDate() {
+        return expectedDeliveryDate;
+    }
+
+    public void setExpectedDeliveryDate(LocalDate expectedDeliveryDate) {
+        this.expectedDeliveryDate = expectedDeliveryDate;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Long getVendorId() {
@@ -52,5 +100,21 @@ public class PurchaseOrderRequest {
 
     public void setVendorId(Long vendorId) {
         this.vendorId = vendorId;
+    }
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public List<PurchaseOrderItemRequest> getItems() {
+        return items;
+    }
+
+    public void setItems(List<PurchaseOrderItemRequest> items) {
+        this.items = items;
     }
 }

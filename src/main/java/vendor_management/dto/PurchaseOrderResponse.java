@@ -1,6 +1,7 @@
 package vendor_management.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class PurchaseOrderResponse {
 
@@ -10,13 +11,31 @@ public class PurchaseOrderResponse {
 
     private LocalDate orderDate;
 
-    private Double totalAmount;
+    private String referenceNumber;
 
-    private String description;
+    private String paymentTerms;
+
+    private LocalDate expectedDeliveryDate;
+
+    private String deliveryAddress;
+
+    private String billingAddress;
+
+    private String notes;
+
+    private Double subTotal;
+
+    private Double taxAmount;
+
+    private Double grandTotal;
 
     private String status;
 
     private String vendorName;
+
+    private String employeeName;
+
+    private List<PurchaseOrderItemResponse> items;
 
     public Long getId() {
         return id;
@@ -42,20 +61,76 @@ public class PurchaseOrderResponse {
         this.orderDate = orderDate;
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
+    public String getReferenceNumber() {
+        return referenceNumber;
     }
 
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setReferenceNumber(String referenceNumber) {
+        this.referenceNumber = referenceNumber;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPaymentTerms() {
+        return paymentTerms;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPaymentTerms(String paymentTerms) {
+        this.paymentTerms = paymentTerms;
+    }
+
+    public LocalDate getExpectedDeliveryDate() {
+        return expectedDeliveryDate;
+    }
+
+    public void setExpectedDeliveryDate(LocalDate expectedDeliveryDate) {
+        this.expectedDeliveryDate = expectedDeliveryDate;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public Double getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(Double taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public Double getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(Double grandTotal) {
+        this.grandTotal = grandTotal;
     }
 
     public String getStatus() {
@@ -72,5 +147,21 @@ public class PurchaseOrderResponse {
 
     public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public List<PurchaseOrderItemResponse> getItems() {
+        return items;
+    }
+
+    public void setItems(List<PurchaseOrderItemResponse> items) {
+        this.items = items;
     }
 }

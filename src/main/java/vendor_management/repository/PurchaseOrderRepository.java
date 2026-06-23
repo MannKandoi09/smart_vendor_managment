@@ -5,10 +5,15 @@ import org.springframework.stereotype.Repository;
 import vendor_management.entity.PurchaseOrder;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PurchaseOrderRepository
         extends JpaRepository<PurchaseOrder, Long> {
+
+    boolean existsByPoNumber(String poNumber);
+
+    Optional<PurchaseOrder> findByPoNumber(String poNumber);
 
     List<PurchaseOrder> findByActiveTrue();
 
@@ -17,5 +22,9 @@ public interface PurchaseOrderRepository
     List<PurchaseOrder> findByPoNumberContainingIgnoreCase(
             String poNumber);
 
+    List<PurchaseOrder> findByEmployeeId(Long employeeId);
+
     long countByStatus(String status);
+
+
 }

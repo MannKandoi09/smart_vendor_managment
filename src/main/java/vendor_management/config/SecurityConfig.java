@@ -26,20 +26,24 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
+                        // 1. Authentication endpoints complete bypass
+                        .requestMatchers("/auth/**").permitAll()
 
-                        .requestMatchers("/auth/**")
-                        .permitAll()
+                        // 2. FIXED: Explicitly allow Purchase Order endpoints for both Admin and User/Employee roles
+                        // It covers both list page ("") and specific ID details ("/**") safely
+                        .requestMatchers("/purchase-orders", "/purchase-orders/**").hasAnyRole("ADMIN", "USER")
 
-                        .requestMatchers("/admin/**")
-                        .hasRole("ADMIN")
+                        // 3. Admin strictly bounded resources
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        .requestMatchers("/user/**")
-                        .hasAnyRole("USER", "ADMIN")
+                        // 4. User bounded resources
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
 
+                        // 5. Vendor explicit authentication checkpoints
                         .requestMatchers("/admin/vendors/**").authenticated()
 
-                        .anyRequest()
-                        .authenticated()
+                        // 6. Remaining fallback requests
+                        .anyRequest().authenticated()
                 )
 
                 .addFilterBefore(

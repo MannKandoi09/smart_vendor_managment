@@ -189,8 +189,7 @@ public class VendorService {
     }
 
     public List<Vendor> getAllVendors() {
-
-        return vendorRepository.findByActiveTrue();
+        return vendorRepository.findAll();
     }
 
 
