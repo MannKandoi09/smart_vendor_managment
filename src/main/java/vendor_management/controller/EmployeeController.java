@@ -53,20 +53,8 @@ public class EmployeeController {
     public String deleteEmployee(@PathVariable(name = "id") Long id) { // 🚀 FIXED: explicit name map add kiya
         return employeeService.deleteEmployee(id);
     }
-    @PutMapping("/{id}/activate")
-    public Employee activateEmployee(
-            @PathVariable Long id) {
 
-        return employeeService
-                .activateEmployee(id);
-    }
-    @PutMapping("/{id}/deactivate")
-    public Employee deactivateEmployee(
-            @PathVariable Long id) {
 
-        return employeeService
-                .deactivateEmployee(id);
-    }
 
     @GetMapping("/employee/{employeeId}")
     public List<PurchaseOrder>
@@ -75,5 +63,20 @@ public class EmployeeController {
 
         return purchaseOrderRepository
                 .findByEmployeeId(employeeId);
+    }
+
+    @PutMapping("/{id}/activate")
+    public Employee activateEmployee(@PathVariable("id") Long id) {
+        return employeeService.activateEmployee(id);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public Employee deactivateEmployee(@PathVariable("id") Long id) {
+        return employeeService.deactivateEmployee(id);
+    }
+
+    @GetMapping("/active")
+    public List<Employee> getActiveEmployees() {
+        return employeeService.getAllActiveEmployees();
     }
 }

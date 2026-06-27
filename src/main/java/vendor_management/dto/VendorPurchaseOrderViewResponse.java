@@ -3,25 +3,25 @@ package vendor_management.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-public class PurchaseOrderResponse {
+public class VendorPurchaseOrderViewResponse {
 
     private Long id;
 
     private String poNumber;
 
+    private String vendorName;
+
+    private String employeeName;
+
     private LocalDate orderDate;
 
-    private String referenceNumber;
+    private LocalDate expectedDeliveryDate;
 
     private String paymentTerms;
-
-    private LocalDate expectedDeliveryDate;
 
     private String deliveryAddress;
 
     private String billingAddress;
-
-    private String notes;
 
     private Double subTotal;
 
@@ -29,16 +29,15 @@ public class PurchaseOrderResponse {
 
     private Double grandTotal;
 
+    private String notes;
+
     private String status;
 
-    private String vendorName;
-
-    private String employeeName;
-
-    private Long vendorId;
-    private Long employeeId;
+    private String invoiceStatus;
 
     private List<PurchaseOrderItemResponse> items;
+
+    // Generate Getters and Setters
 
 
     public Long getId() {
@@ -57,6 +56,22 @@ public class PurchaseOrderResponse {
         this.poNumber = poNumber;
     }
 
+    public String getVendorName() {
+        return vendorName;
+    }
+
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
     public LocalDate getOrderDate() {
         return orderDate;
     }
@@ -65,12 +80,12 @@ public class PurchaseOrderResponse {
         this.orderDate = orderDate;
     }
 
-    public String getReferenceNumber() {
-        return referenceNumber;
+    public LocalDate getExpectedDeliveryDate() {
+        return expectedDeliveryDate;
     }
 
-    public void setReferenceNumber(String referenceNumber) {
-        this.referenceNumber = referenceNumber;
+    public void setExpectedDeliveryDate(LocalDate expectedDeliveryDate) {
+        this.expectedDeliveryDate = expectedDeliveryDate;
     }
 
     public String getPaymentTerms() {
@@ -79,14 +94,6 @@ public class PurchaseOrderResponse {
 
     public void setPaymentTerms(String paymentTerms) {
         this.paymentTerms = paymentTerms;
-    }
-
-    public LocalDate getExpectedDeliveryDate() {
-        return expectedDeliveryDate;
-    }
-
-    public void setExpectedDeliveryDate(LocalDate expectedDeliveryDate) {
-        this.expectedDeliveryDate = expectedDeliveryDate;
     }
 
     public String getDeliveryAddress() {
@@ -103,14 +110,6 @@ public class PurchaseOrderResponse {
 
     public void setBillingAddress(String billingAddress) {
         this.billingAddress = billingAddress;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public Double getSubTotal() {
@@ -137,6 +136,14 @@ public class PurchaseOrderResponse {
         this.grandTotal = grandTotal;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -145,20 +152,12 @@ public class PurchaseOrderResponse {
         this.status = status;
     }
 
-    public String getVendorName() {
-        return vendorName;
+    public String getInvoiceStatus() {
+        return invoiceStatus;
     }
 
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
-    }
-
-    public String getEmployeeName() {
-        return employeeName;
-    }
-
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
+    public void setInvoiceStatus(String invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
     }
 
     public List<PurchaseOrderItemResponse> getItems() {
@@ -167,21 +166,5 @@ public class PurchaseOrderResponse {
 
     public void setItems(List<PurchaseOrderItemResponse> items) {
         this.items = items;
-    }
-
-    public Long getVendorId() {
-        return vendorId;
-    }
-
-    public void setVendorId(Long vendorId) {
-        this.vendorId = vendorId;
-    }
-
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
     }
 }

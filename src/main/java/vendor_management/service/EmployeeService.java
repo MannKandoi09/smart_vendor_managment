@@ -142,28 +142,18 @@ public class EmployeeService {
 
         return "Employee Deleted Successfully";
     }
+
     public Employee activateEmployee(Long id) {
-
-        Employee employee =
-                employeeRepository.findById(id)
-                        .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Employee Not Found"));
-
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
         employee.setActive(true);
-
         return employeeRepository.save(employee);
     }
+
     public Employee deactivateEmployee(Long id) {
-
-        Employee employee =
-                employeeRepository.findById(id)
-                        .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Employee Not Found"));
-
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
         employee.setActive(false);
-
         return employeeRepository.save(employee);
     }
 
@@ -173,5 +163,9 @@ public class EmployeeService {
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "Employee Not Found"));
+    }
+
+    public List<Employee> getAllActiveEmployees() {
+        return employeeRepository.findByActiveTrue();
     }
 }

@@ -27,10 +27,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
     // 🚀 FIXED: explicit configuration method to skip filter logic for public endpoints
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request)
+            throws ServletException {
+
         String path = request.getRequestURI();
-        // Custom bypass rules formulation for authorization endpoint and employee module
-        return path.startsWith("/admin/employees") || path.startsWith("/auth/");
+
+        return path.startsWith("/auth/")
+                || path.startsWith("/admin/employees")
+                || path.startsWith("/purchase-orders")
+                || path.startsWith("/admin/purchase-orders")
+                || path.startsWith("/admin/deliveries")
+                || path.startsWith("/admin/invoices");
     }
 
     @Override

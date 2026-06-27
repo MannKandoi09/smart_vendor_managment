@@ -15,6 +15,8 @@ public class PurchaseOrderItemResponse {
 
     private Double total;
 
+    private Double totalPrice;
+
     public String getItemName() {
         return itemName;
     }
@@ -61,5 +63,13 @@ public class PurchaseOrderItemResponse {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

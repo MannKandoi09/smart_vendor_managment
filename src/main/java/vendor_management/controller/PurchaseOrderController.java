@@ -3,15 +3,18 @@ package vendor_management.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vendor_management.dto.PurchaseOrderDropdownResponse;
 import vendor_management.dto.PurchaseOrderRequest;
 import vendor_management.dto.PurchaseOrderResponse;
+import vendor_management.entity.PurchaseOrder;
 import vendor_management.service.PurchaseOrderService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/purchase-orders")
-@CrossOrigin(origins = "*") // Agar frontend ports mismatch (CORS) block ho raha ho toh use karein
+@CrossOrigin(origins = "*")
+ // Agar frontend ports mismatch (CORS) block ho raha ho toh use karein
 public class PurchaseOrderController {
 
     @Autowired
@@ -40,15 +43,23 @@ public class PurchaseOrderController {
 
     // 5. FIXED: Changed return type from PurchaseOrder to PurchaseOrderResponse
     @PutMapping("/{id}/approve")
-    public ResponseEntity<PurchaseOrderResponse> approvePurchaseOrder(@PathVariable Long id) {
-        PurchaseOrderResponse response = purchaseOrderService.approvePurchaseOrder(id);
+    public ResponseEntity<PurchaseOrderResponse> approvePurchaseOrder(
+            @PathVariable("id") Long id) {
+
+        PurchaseOrderResponse response =
+                purchaseOrderService.approvePurchaseOrder(id);
+
         return ResponseEntity.ok(response);
     }
 
     // 6. FIXED: Changed return type from PurchaseOrder to PurchaseOrderResponse
     @PutMapping("/{id}/reject")
-    public ResponseEntity<PurchaseOrderResponse> rejectPurchaseOrder(@PathVariable Long id) {
-        PurchaseOrderResponse response = purchaseOrderService.rejectPurchaseOrder(id);
+    public ResponseEntity<PurchaseOrderResponse> rejectPurchaseOrder(
+            @PathVariable("id") Long id) {
+
+        PurchaseOrderResponse response =
+                purchaseOrderService.rejectPurchaseOrder(id);
+
         return ResponseEntity.ok(response);
     }
 
@@ -74,5 +85,12 @@ public class PurchaseOrderController {
         // Hamne explicitly ("poNumber") define kar diya hai
         PurchaseOrderResponse response = purchaseOrderService   .getPurchaseOrderByPoNumber(poNumber);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/approved")
+    public List<PurchaseOrderDropdownResponse> getApprovedPurchaseOrders() {
+        System.out.println("Approved API HIT");
+        return purchaseOrderService
+                .getApprovedPurchaseOrders();
     }
 }

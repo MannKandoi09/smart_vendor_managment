@@ -3,10 +3,7 @@ package vendor_management.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vendor_management.dto.PurchaseOrderItemRequest;
-import vendor_management.dto.PurchaseOrderItemResponse;
-import vendor_management.dto.PurchaseOrderRequest;
-import vendor_management.dto.PurchaseOrderResponse;
+import vendor_management.dto.*;
 import vendor_management.entity.Employee;
 import vendor_management.entity.PurchaseOrder;
 import vendor_management.entity.PurchaseOrderItem;
@@ -129,10 +126,22 @@ public class PurchaseOrderService {
         response.setGrandTotal(po.getGrandTotal());
 
         if (po.getVendor() != null) {
-            response.setVendorName(po.getVendor().getVendorName());
+
+            response.setVendorId(
+                    po.getVendor().getId());
+
+            response.setVendorName(
+                    po.getVendor().getVendorName());
         }
+
         if (po.getEmployee() != null) {
-            response.setEmployeeName(po.getEmployee().getFirstName() + " " + po.getEmployee().getLastName());
+
+            response.setEmployeeId(
+                    po.getEmployee().getId());
+
+            response.setEmployeeName(
+                    po.getEmployee().getFirstName() + " " +
+                            po.getEmployee().getLastName());
         }
 
         if (po.getItems() != null) {
@@ -259,4 +268,35 @@ public class PurchaseOrderService {
     public Long totalPurchaseOrders() { return purchaseOrderRepository.count(); }
     public Long approvedPurchaseOrders() { return purchaseOrderRepository.countByStatus("APPROVED"); }
     public Long rejectedPurchaseOrders() { return purchaseOrderRepository.countByStatus("REJECTED"); }
+
+    public List<PurchaseOrderDropdownResponse> getApprovedPurchaseOrders() {
+
+        List<PurchaseOrder> purchaseOrders =
+                purchaseOrderRepository.findByStatusAndActiveTrue("APPROVED");
+
+        List<PurchaseOrderDropdownResponse> responseList =
+                new ArrayList<>();
+
+        for (PurchaseOrder po : purchaseOrders) {
+
+            PurchaseOrderDropdownResponse response =
+                    new PurchaseOrderDropdownResponse();
+
+            response.setId(po.getId());
+            response.setPoNumber(po.getPoNumber());
+            response.setVendorId(
+                    po.getVendor().getId());
+
+            response.setVendorName(
+                    po.getVendor().getVendorName());
+
+            response.setGrandTotal(
+                    po.getGrandTotal());
+            responseList.add(response);
+        }
+
+        return responseList;
+    }
+
+
 }

@@ -3,11 +3,10 @@ package vendor_management.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import vendor_management.security.JwtFilter;
 
 @Configuration
@@ -17,33 +16,64 @@ public class SecurityConfig {
     private JwtFilter jwtFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
-
+                // Ensures session context is completely stateless for custom API token mapping
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // 1. Authentication endpoints complete bypass
                         .requestMatchers("/auth/**").permitAll()
 
-                        // 🚀 FIXED: Ab actual path '/admin/employees/**' hai, isliye ise explicitly bypass karein
-                        .requestMatchers("/admin/employees", "/admin/employees/**").permitAll()
+                        // 🚀 2. EMPLOYEES MODULE: Explicitly allow dynamic listings publicly to unblock dropdowns
+                        .requestMatchers(
+                                "/admin/employees",
+                                "/admin/employees/",
+                                "/admin/employees/**",
+                                "/admin/employees/active"
+                        ).permitAll()
 
-                        // 2. Explicitly allow Purchase Order endpoints for both Admin and User/Employee roles
-                        .requestMatchers("/purchase-orders", "/purchase-orders/**").hasAnyRole("ADMIN", "USER")
+                        // 🚀 3. PURCHASE ORDERS MODULE: Bypassing variations for dynamic frontend cross-origin lookups
+                        .requestMatchers(
+                                "/purchase-orders",
+                                "/purchase-orders/",
+                                "/purchase-orders/**",
+                                "/admin/purchase-orders",
+                                "/admin/purchase-orders/",
+                                "/admin/purchase-orders/**"
+                        ).permitAll()
 
-                        // 3. Admin strictly bounded resources (Iske upar employee allow lagaya hai, toh ye baki cheezo ko safe rakhega)
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // 4. User bounded resources
+
+                        .requestMatchers("/admin/dashboard/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                "/admin/invoices",
+                                "/admin/invoices/",
+                                "/admin/invoices/**"
+                        ).permitAll()
+
+                        // 🚀 4. DELIVERIES MODULE LISTINGS & DROPDOWNS: Complete open bypass using wildcards BEFORE strict checks
+                        .requestMatchers(
+                                "/admin/deliveries",
+                                "/admin/deliveries/",
+                                "/admin/deliveries/**", // 👈 CRITICAL FIXED LINE: Unblocks flat list and subpaths globally
+                                "/admin/deliveries/available-employees",
+                                "/admin/deliveries/available-purchase-orders"
+                        ).permitAll()
+
+                        // 5. Secured Module Checkpoints (Strict Top-Down Order)
+                        .requestMatchers("/admin/vendors/**").authenticated()
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
 
-                        // 5. Vendor explicit authentication checkpoints
-                        .requestMatchers("/admin/vendors/**").authenticated()
+                        // 6. Global Admin structural catch-all configuration
+                        .requestMatchers("/vendor/**")
+                        .hasRole("VENDOR")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // 6. Remaining fallback requests
+                        // 7. Remaining fallback requests
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
